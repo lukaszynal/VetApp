@@ -21,19 +21,19 @@ namespace VetApp.Controllers
         }
 
         [HttpGet("/animals")]
-        public ActionResult<List<Animal>> GetAnimals([FromQuery] AnimalQueryParameters queryParameters)
+        public async Task<ActionResult<List<Animal>>> GetAnimals([FromQuery] AnimalQueryParameters queryParameters)
         {
-            return this.animalRepository.GetAnimals(queryParameters);
+            return await this.animalRepository.GetAnimalsAsync(queryParameters);
         }
 
         [HttpGet("/animals/{id}")]
-        public ActionResult<Animal> GetAnimal([FromRoute]int id)
+        public async Task<ActionResult<Animal>> GetAnimal([FromRoute]int id)
         {
             this.logger.LogInformation(message: $"GetAnimal({id})");
 
             try
             {
-                Animal animal = this.animalRepository.GetAnimal(id);
+                Animal animal = await this.animalRepository.GetAnimalAsync(id);
                 this.logger.LogInformation(message: $"GetAnimal({id}) returned a animal.", animal);
                 return animal;
             }
@@ -45,13 +45,13 @@ namespace VetApp.Controllers
         }
 
         [HttpPost("/animals")]
-        public ActionResult<Animal> AddAnimal([FromBody]Animal animal)
+        public async Task<ActionResult<Animal>> AddAnimal([FromBody]Animal animal)
         {
             this.logger.LogInformation(message: $"AddAnimal()");
 
             if (ModelState.IsValid)
             {
-                this.animalRepository.AddAnimal(animal);
+                await this.animalRepository.AddAnimalAsync(animal);
                 this.logger.LogInformation(message: "UpdateAnimal() successfully completed");
                 return animal;
             }
@@ -63,13 +63,13 @@ namespace VetApp.Controllers
         }
 
         [HttpPut("/animals/{id}")]
-        public ActionResult<Animal> UpdateAnimal([FromRoute]int id, [FromBody]Animal animal)
+        public async Task<ActionResult<Animal>> UpdateAnimal([FromRoute]int id, [FromBody]Animal animal)
         {
             this.logger.LogInformation(message: $"UpdateAnimal({id})");
 
             try
             {
-                this.animalRepository.UpdateAnimal(id, animal);
+                await this.animalRepository.UpdateAnimalAsync(id, animal);
                 this.logger.LogInformation($"UpdateAnimal({id}) successfully completed");
                 return animal;
             }
@@ -81,13 +81,13 @@ namespace VetApp.Controllers
         }
 
         [HttpDelete("/animals/{id}")]
-        public ActionResult<int> DeleteAnimal([FromRoute]int id)
+        public async Task<ActionResult<int>> DeleteAnimal([FromRoute]int id)
         {
             this.logger.LogInformation($"DeleteAnimal({id})");
 
             try
             {
-                this.animalRepository.DeleteAnimal(id);
+                await this.animalRepository.DeleteAnimalAsync(id);
                 this.logger.LogInformation($"DeleteAnimal({id}) successfully completed");
                 return id;
             }
