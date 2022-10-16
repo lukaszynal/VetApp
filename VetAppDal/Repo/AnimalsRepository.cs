@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace VetAppDal.Repo
             context = ctx;
         }
 
-        public List<Animal> GetAnimals(AnimalQueryParameters queryParemeters)
+        public async Task<List<Animal>> GetAnimalsAsync(AnimalQueryParameters queryParemeters)
         {
             IQueryable<Animal> animals = context.Animals;
 
@@ -38,14 +39,14 @@ namespace VetAppDal.Repo
                 .Skip(queryParemeters.Size * (queryParemeters.Page - 1))
                 .Take(queryParemeters.Size);
 
-            return animals.ToList();
+            return await animals.ToListAsync();
         }
 
-        public Animal GetAnimal(int id)
+        public async Task<Animal> GetAnimalAsync(int id)
         {
             if (context.Animals.Any(x => x.Id == id))
             {
-                return this.context.Animals.First(x => x.Id == id);
+                return  await this.context.Animals.FirstAsync(x => x.Id == id);
             }
             else
             {
@@ -53,14 +54,14 @@ namespace VetAppDal.Repo
             }
         }
 
-        public Animal AddAnimal(Animal animal)
+        public async Task<Animal> AddAnimalAsync(Animal animal)
         {
             this.context.Add(animal);
-            this.context.SaveChanges();
+            await this.context.SaveChangesAsync();
             return animal;
         }
 
-        public Animal UpdateAnimal(int id, Animal animal)
+        public async Task<Animal> UpdateAnimalAsync(int id, Animal animal)
         {
             if (animal.Id != id)
             {
@@ -69,8 +70,8 @@ namespace VetAppDal.Repo
 
             if (context.Animals.Any(x => x.Id == id))
             {
-                this.context.Entry(animal).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-                this.context.SaveChanges();
+                this.context.Entry(animal).State = EntityState.Modified;
+                await this.context.SaveChangesAsync();
 
                 return animal;
             }
@@ -80,13 +81,13 @@ namespace VetAppDal.Repo
             }
         }
 
-        public int DeleteAnimal(int id)
+        public async Task<int> DeleteAnimalAsync(int id)
         {
             if (context.Animals.Any(x => x.Id == id))
             {
                 Animal animal = context.Animals.First(x => x.Id == id);
                 this.context.Animals.Remove(animal);
-                this.context.SaveChanges();
+                await this.context.SaveChangesAsync();
                 return id;
             }
             else

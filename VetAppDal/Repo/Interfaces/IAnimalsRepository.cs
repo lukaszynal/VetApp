@@ -10,10 +10,10 @@ namespace VetAppDal.Repo.Interfaces
 {
     public interface IAnimalsRepository
     {
-        public List<Animal> GetAnimals(AnimalQueryParameters queryParemeters);
-        public Animal GetAnimal(int id);
-        public Animal AddAnimal(Animal animal);
-        public Animal UpdateAnimal(int id, Animal animal);
-        public int DeleteAnimal(int id);
+        public Task<List<Animal>> GetAnimalsAsync(AnimalQueryParameters queryParemeters);
+        public Task<Animal> GetAnimalAsync(int id);
+        public Task<Animal> AddAnimalAsync(Animal animal);
+        public Task<Animal> UpdateAnimalAsync(int id, Animal animal);
+        public Task<int> DeleteAnimalAsync(int id);
     }
 }
